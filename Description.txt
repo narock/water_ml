@@ -1,0 +1,17 @@
+1) nwm_v20_hourly: this is a file of hourly predictions by the National Water Model
+
+2) nwis_v20_daily: this is a time series of 7541 sites where USGS measures stream/river flows 
+
+Note the NWM is hourly and the NWIS is daily. 
+NWIS records will have a lot of NA values as all sites do not have complete records from 1993-2018.
+
+3) mapping.rds is a mapping file that contains the feature_id, USGS gageID, and the dimension indices in the respective files. It is useful for determining which National Water Model prediction corresponds to which USGS stream/river measurement. 
+
+4) An example R script that shows how to pull a data.frame of aligned, daily NWM and NWIS flow records. Units are CMS for both time series.
+
+Note: The data in the two .nc files only contain ID numbers. No location info is provided with the USGS measurements. However, the site: https://waterdata.usgs.gov/nwis/inventory provides more detailed information on all 7541 USGS stream/river measurement sites. A site ID can be entered at https://waterdata.usgs.gov/nwis/inventory and the site will return state name, latitude, longitude, etc.
+
+Related Links
+--------------
+https://files.hawaii.gov/dbedt/op/gis/data/NID_DataDictionary_20190208.pdf 
+https://mikejohnson51.github.io/nwmHistoric/ 
