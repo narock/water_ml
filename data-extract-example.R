@@ -8,7 +8,7 @@ library(dplyr)
 
 # You will need the files I shared with you and to update these paths
 ## load data
-dir = '/Users/narock/Box Sync/Goucher/Grants_NSF/UFOKN/Mike_Flood_ML/'
+dir = '/Users/nodarsotkilava/Developer/water_ml/'
 mapping    = readRDS( paste(dir,"mapping.rds", sep="") )
 ## establish netCDF connections
 nwis       = open.nc( paste(dir,"nwis_v20_daily.nc", sep="") )
