@@ -13,8 +13,10 @@ mapping    = readRDS( paste(dir,"mapping.rds", sep="") )
 ## establish netCDF connections
 nwis       = open.nc( paste(dir,"nwis_v20_daily.nc", sep="") )
 nwm        = open.nc( paste(dir,"nwm_v20_hourly.nc", sep="") )
+## generate empty data frame
 site_cor = data.frame(Site_Number = integer(), Correlation = double())
 
+## loop through every row and grab the site
 for(i in 1:nrow(mapping)){
   test.site = mapping[i,]
   nwm_flow <- data.frame(
@@ -47,6 +49,7 @@ for(i in 1:nrow(mapping)){
   #plot(final$date, final$nwm_cms, type = "l", ylim =c(0,300))
   #lines(final$date, final$nwis_cms, col  = "red")
   
+  ## Try to compute the correlation; sometimes SD came out to be zero
   c <- tryCatch(
     expr = {
       cor(final$nwm_cms, final$nwis_cms)
@@ -55,6 +58,8 @@ for(i in 1:nrow(mapping)){
       "Warning: SD is zero"
     }
   )
+  ## Add the site number and its correlation to the frame
   site_cor[nrow(site_cor) + 1, ] = c(test.site$site_no, c)
 }
+## Export it as an excel
 write.xlsx(site_cor, "/Users/nodarsotkilava/Developer/water_ml/site_cor.xlsx")
