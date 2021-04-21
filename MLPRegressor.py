@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 
@@ -22,7 +22,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 
 
 
-clf = RandomForestRegressor(n_estimators=5000,  random_state=100)
+clf = MLPRegressor(hidden_layer_sizes=(100,100), activation="relu")
 
 
 clf.fit(X_train, y_train)
