@@ -1,34 +1,41 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import mean_squared_error, recall_score, f1_score
-from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from sklearn.metrics import f1_score, plot_confusion_matrix
+from sklearn.ensemble import  RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 
+seasons = ["Fall", "Spring", "Winter", "Summer"]
+dir = "D:\Developer\water_ml\Data\{}\\{}_{}.csv"
+starting_year = 1995
+for season in seasons:
+    #df = pd.DataFrame()
+    for i in range(23):
+        waterAverage = pd.read_csv(dir.format(season, season.lower(),i + starting_year), sep=r'\s*,\s*')
+
+        y = np.array(waterAverage['range'].dropna())
+        X = np.array(waterAverage[['lat','long']].dropna())
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+        clf = RandomForestClassifier(n_estimators=5000,  random_state=100)
+
+        clf.fit(X_train, y_train)
+
+        y_predict = clf.predict(X_test)
+
+        plot_confusion_matrix(clf, X_test, y_test)
+
+        plt.savefig("D:\Developer\water_ml\Data\Confusion_Matrix_Plots\{}\\{}_{}.png".format(season,season.lower(),i + starting_year))
+
+        #f1_score =  metrics.f1_score(y_test, y_predict, average = "micro")
 
 
-#waterAverage = pd.read_csv("D:\Developer\water_ml\Data\Fall\\fall_2017.csv", sep=r'\s*,\s*')
-#waterAverage = pd.read_csv("D:\Developer\water_ml\Data\Spring\\spring_2017.csv", sep=r'\s*,\s*')
-#waterAverage = pd.read_csv("D:\Developer\water_ml\Data\Winter\\winter_2017.csv", sep=r'\s*,\s*')
-waterAverage = pd.read_csv("D:\Developer\water_ml\Data\Summer\\summer_2017.csv", sep=r'\s*,\s*')
+        #df["Year"] = i + starting_year
+        #df["F1 Score"] = f1_score
 
-y = np.array(waterAverage['range'].dropna())
-X = np.array(waterAverage[['lat','long']].dropna())
+   #df.to_csv(r"D:\Developer\water_ml\Data\{}f1_score.csv".format(season), index = False)
 
 
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-
-
-
-clf = RandomForestClassifier(n_estimators=5000,  random_state=100)
-
-
-clf.fit(X_train, y_train)
-
-y_predict = clf.predict(X_test)
-
-
-print('f1-score: %.2f' 
-      % metrics.f1_score(y_test, y_predict, average = "micro"))
-#print(metrics.classification_report(y_predict,y_test))
