@@ -11,8 +11,14 @@ for season in seasons:
         file = pd.read_csv(dir.format(season, season.lower(),i + starting_year), sep=r'\s*,\s*')
         file = file.dropna()
 
-        
-        sites = [x for x, y in zip(file["site"], file["bias"]) if y > 2e9]
+        if season == "Fall":
+            sites = [x for x, y in zip(file["site"], file["bias"]) if y >= 57846.58]
+        if season == "Winter":
+            sites = [x for x, y in zip(file["site"], file["bias"]) if y >= 316711.7]
+        if season == "Summer":
+            sites = [x for x, y in zip(file["site"], file["bias"]) if y >= 180892.37]
+        if season == "Spring":
+            sites = [x for x, y in zip(file["site"], file["bias"]) if y >= 502921.3]
 
         df = pd.DataFrame(sites)
 
