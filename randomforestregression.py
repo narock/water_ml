@@ -1,33 +1,32 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.metrics import plot_confusion_matrix
-from sklearn.ensemble import  RandomForestClassifier
+from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
 seasons = ["Fall", "Spring", "Winter", "Summer"]
-dir = "D:\Developer\water_ml\Data\{}\\{}_{}.csv"
 starting_year = 1995
-for season in seasons:
-    #df = pd.DataFrame()
-    for i in range(23):
-        waterAverage = pd.read_csv(dir.format(season, season.lower(),i + starting_year), sep=r'\s*,\s*')
+for idx, season in enumerate(seasons):
+    waterAverage = pd.read_csv(f"{season}_data.csv", sep=r'\s*,\s*')
 
-        y = np.array(waterAverage['range'])
-        X = np.array(waterAverage[['lat_x','long_x', "Altitude"]])
+    y = np.array(waterAverage['bias'])
+    seasons_encoded = np.array(
+        [idx for _ in range(waterAverage['season'].shape[0])])
+    seasons_encoded = seasons_encoded.reshape(-1, 1)
+    X = np.array(waterAverage[['lat', 'long', "Altitude", "year"]])
+    print(seasons_encoded.shape)
+    X = np.append(X, seasons_encoded, axis=1)
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X,
+                                                        y,
+                                                        test_size=0.33,
+                                                        random_state=42)
 
-        clf = RandomForestClassifier(n_estimators=5000,  random_state=100)
+    clf = RandomForestRegressor(n_estimators=5000, random_state=100)
 
-        clf.fit(X_train, y_train)
+    clf.fit(X_train, y_train)
 
-        y_predict = clf.predict(X_test)
+    y_predict = clf.predict(X_test)
 
-        plot_confusion_matrix(clf, X_test, y_test)
-
-        plt.savefig("D:\Developer\water_ml\Data\RandomForrestResults\Confusion_Matrix_Plots\\alt\{}\\{}_{}.png".format(season,season.lower(),i + starting_year))
-
-
-
-
+    print(f"For {season} our MSE is {mean_squared_error(y_test,y_predict)}")
